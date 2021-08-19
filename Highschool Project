@@ -1,1 +1,334 @@
+// Start Screen --> Second Screen:
+
+onEvent("startButton","click",function (event){
+  setScreen("screen2");
+  event;
+});
+
+// Second Screen Dialogue:
+                                           // Variables:  (Dialogue)
+var a = "It appears the evil red hat has been stirring up trouble again";
+var b = "If only there were someone brave enough to take him on, I'm afraid my body won't keep up with me this time around...";
+var c = "Hold on, an idea just popped into my head!";
+var d = "This may just be the ramblings of an old man, but I believe that you have the potential to defeat the orange hat!";
+var e = "Of course, you would need proper training beforehand, but I have prepared an intense training regimen that is grueling for even the most experienced of adventurers";
+var f = "My my, how rude of me; I forgot to ask you your name";
+var g = "Kind adventurer, what is your name?";
+var h = "";
+var list = [a,b,c,d,e,f,g,h];
+var run = 0;
+var d1 = 0;
+
+onEvent("screen2", "click", function(tclick) {          // Click Screen, changes text:
+  setText("text_box1",list [d1]);
+  d1++;
+  console.log ("d1 =" + d1);
+  run++;
+  console.log ("run =" + run);
+  tclick;
+  
+if (run ==8){
+  setScreen ("screen2.1");        // <--  Screen changes to Screen 2.1
+  hideElement("button2.1");
+  d1 = 0;
+}
+});
+
+// Screen 2.1 Adventurer Name:
+
+onEvent ("text_input1", "change", function (buttonshow){       // Shows hidden button to continue
+  showElement("button2.1");
+  buttonshow;
+  var nameA = getText("text_input1");
+  setText("text_box2", "Behold " + nameA + ", my white flowing hair!");   // ADVENTURER NAME
+});
+
+onEvent ("button2.1", "click", function (buttonclick){ // <-- Screen changes to screen 3 on button press
+  setScreen ("screen3");
+  buttonclick;
+});
+
+// Third Screen Dialogue:
+                                        // Variables: (Dialogue 2)
+var i = "Nevermind that, we have business to take care of.";
+var j = "On the following screen you'll see all the types of training I have prepared for you";
+var k = "Don't mind all the x's, take it one step at a time and you'll progress through my training and unlock more as you go along";
+var l = "Click on the first level you see available I guess...";
+var m = "I don't really have anything else to say so uh... toodle doo!";
+var n = "";
+var list2 = [i,j,k,l,m,n];
+var run2 = 0;
+var d2 = 0;
+
+onEvent("screen3", "click", function(tclick2) {
+  setText("text_box2",list2 [d2]);
+  d2++;
+  console.log("d2 =" + d2);
+  run2++;
+  console.log ("run 2 =" + run2);
+  tclick2;
+  
+if (run2 == 6){
+  setScreen("screen4");                          // <-- Screen changes to Screen 4 (minigames screen)
+}
+});
+
+// Screen 5: Archery minigame
+
+var archScore = 0;
+var seconds = 30;
+
+onEvent ("image1", "click", function (Arules){   // <-- Screen changes to archery game rules screen
+  setScreen("screen5.1");
+  Arules;
+});
+
+onEvent ("button5.1", "click", function (Agame){
+  setScreen ("screen5.2");                      // <-- Screen changes to archery game screen
+  Agame;
+  
+ setPosition("target", (randomNumber(45),randomNumber(245)), ((randomNumber(100),randomNumber(420))));
+    timedLoop(1000, function(Atimer) {           // <-- Starts 30 second timer on screen change
+    seconds = seconds - 1;
+    setText ("targettime", "Time left: " + seconds + "secs");
+    console.log(seconds + " seconds have elapsed 1");
+    Atimer;
+
+if (seconds == 0){
+  setScreen ("screen5lose");
+}
+
+onEvent("screen5win","mouseover", function(stoptimer1){
+    stopTimedLoop(Atimer);
+    stoptimer1;
+});
+
+onEvent("screen5lose","mouseover", function(stoptimer1){
+    stopTimedLoop(Atimer);
+    stoptimer1;
+    seconds = 30;
+    archScore = 0;
+});
+});
+});
+
+
+onEvent("target", "click", function (Apoints){
+  archScore++;                                  //Gives 1 point per click on  target
+  console.log("Archery Score = " + archScore);
+  setText("targetscore", "Targets Hit: " + archScore);
+  setPosition("target", (randomNumber(45),randomNumber(245)), ((randomNumber(100),randomNumber(420))));
+  Apoints;
+  
+if (archScore == 10){                          // Level complete after 10 points
+  setScreen("screen5win");
+}
+});
+
+onEvent("button5win", "click", function (level2ready){
+  showElement("win1");
+  hideElement("imagelock1");
+  setScreen("screen4");
+  level2ready;
+});
+
+onEvent("button5lose", "click", function (retry1){
+  setScreen("screen5.1");
+  retry1;
+});
+
+//Screen 6: Sword Minigame
+
+var dScore = 0;                               //  <-- Dummy hits score
+var seconds2 = 30;
+
+onEvent("image2","click", function (level2){
+  setScreen("screen6.1");                     // <-- Changes screen to rules screen
+  level2;
+});
+
+onEvent("button6.1","click", function (startlvl2){
+  setScreen ("screen6.2");                    // <-- Changes screen 2 game screen
+  startlvl2;
+timedLoop(1000, function(Atimer2) {           // <-- Starts 30 second timer on screen change
+  seconds2 = seconds2 - 1;
+  setText ("dummytime", "Time left: " + seconds2 + "secs");
+  console.log(seconds2 + " seconds have elapsed 2");
+  Atimer2;
+  
+// Screen 6: Win/Lose
+  
+if (seconds2 == 0){
+  setScreen("screen6lose");
+}
+  
+onEvent("screen6win", "mouseover", function (stoptimer2){
+  stopTimedLoop(Atimer2);
+  stoptimer2;
+});
+
+onEvent("screen6lose", "mouseover", function (stoptimer2){
+  stopTimedLoop(Atimer2);
+  stoptimer2;
+  seconds2 = 30;
+  dScore = 0;
+});
+});
+});
+
+onEvent("dummy", "click", function (dummyscore){
+  dScore++;                                   // Adds hit every time dummy is clicked
+  setText ("dummyhits", "Hits: " + dScore);
+  console.log("Hits: " + dScore);
+  dummyscore;
+
+if (dScore == 45){                           // Level complete after 45 hits
+  setScreen ("screen6win");
+}
+});
+
+onEvent ("button6win", "click", function (screen4){
+  hideElement("imagelock2");
+  showElement("win2");
+  setScreen("screen4");
+  screen4;
+});
+
+onEvent ("button6lose", "click", function (screen501){
+  setScreen ("screen5.1");
+  screen501;
+});
+
+// Screen 7: Shield Minigame
+
+var fireScore = 0;
+var seconds3 = 30;
+
+onEvent ("image3", "click", function (level3rules){
+  setScreen ("screen7.1");
+  level3rules;
+});
+
+onEvent("button7.1", "click", function (level3){
+  setScreen("screen7.2");
+  level3;
+
+
+ setPosition("fireball", (randomNumber(45),randomNumber(245)), ((randomNumber(100),randomNumber(420))));
+    timedLoop(1000, function(Atimer3) {           // <-- Starts 30 second timer on screen change
+    seconds3 = seconds3 - 1;
+    setText ("fireballtime", "Time left: " + seconds3 + "secs");
+    console.log(seconds3 + " seconds have elapsed 3");
+    Atimer3;
+
+// Screen 7: Win/Lose
+
+onEvent("screen7win","mouseover", function(stoptimer){ 
+    stopTimedLoop(Atimer3);
+    stoptimer;
+});
+onEvent("screen7lose","mouseover", function(stoptimer){
+    stopTimedLoop(Atimer3);
+    stoptimer;
+});
+});  
+});
+
+onEvent("fireball", "click", function (Firepoints){
+  fireScore++;                                  //Gives 1 point per click on a fireball
+  console.log("Shield Score = " + fireScore);
+  setText("fireballScore", "Fireballs Blocked: " + fireScore);
+  setPosition("fireball", (randomNumber(45),randomNumber(245)), ((randomNumber(100),randomNumber(420))));
+  Firepoints;
+
+if (fireScore == 15){                          // Level complete after 15 points
+  setScreen("screen7win");
+}
+});
+
+if (seconds3 == 0){
+  setScreen("screen7.1");
+  seconds3 = 30;
+  fireScore = 0;
+}
+
+onEvent ("button7win", "click", function (screen4){
+  hideElement("imagelock2");
+  hideElement("imagelock3");
+  showElement("win3");
+  setScreen("screen4");
+  screen4;
+});
+
+onEvent ("button7lose", "click", function (screen701){
+  setScreen ("screen7.1");
+  screen701;
+});
+
+
+//Screen 8:
+
+onEvent("image4", "click", function (screen8){
+  setScreen("screen8");
+  screen8;
+});
+
+// Screen 8 Dialogue
+
+                                        // Wizard Dialogue
+var o = "Congratulations adventurer, you are now ready to face the orange hat!" ;
+var p = "I am so proud of you, I can't wait for you to - " ;
+var q = "";
+var r = "Yes?" ;
+var s = "" ;
+var t = "" ;
+var u = "Oh my. How ... unexpected" ;
+var v = "Thank you Alfred." ;
+var w = "Well, adventurer it appears as if there is now no longer any need for your services." ;
+var x = "I uh.. this is pretty awkward huh" ;
+var y = "..." ;
+var z = "" ;
+
+                                        // Minion Dialogue
+var a1 = "";
+var a2 = "";
+var p2= "Excuse me boss..";
+var a3 = "";
+var r2= "There's been a mishap";
+var r3= "Turns out the red hat died of a horrible disease this morning...";
+var a4 = "";
+var a5 = "";
+var a6 = "";
+var a7 = "";
+var a8 = "";
+var a9 = "";
+
+                                        // Dialogue code:
+
+var list3 = [o,p,q,r,s,t,u,v,w,x,y,z];
+var list4 = [a1,a2,p2,a3,r2,r3,a4,a5,a6,a7,a8,a9];
+var run3 = 0;
+var d3 = 0;
+var d4 = 0;
+
+onEvent("screen8", "click", function(tclick3) {
+  setText("text_area5",list3 [d3]);
+  d3++;
+  console.log("d3 = " + d3);
+  run3++;
+  console.log ("run3 = " + run3);
+  tclick3;
+  
+if (run3 == 2,4,5){
+  setText("text_area6", list4 [d4]);
+  d4++;
+  console.log ("d4 = " + d4);
+}  
+  
+if (run3 == 12){
+  setScreen("screen9");                          // <-- Screen changes to Screen 9, END SCREEN
+}
+});
+
+//Screen 9 --> END SCREEN
 
